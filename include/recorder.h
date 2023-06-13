@@ -2,7 +2,7 @@
 #define RECORDER_H
 
 struct Recorder{
-    char* configuracao[4];
+    char* configuracao[3];
     unsigned page_faults;
     unsigned dirty_pages;
     unsigned acessos;
