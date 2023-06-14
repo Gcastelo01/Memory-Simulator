@@ -7,6 +7,41 @@
 
 
 /**
+ * @brief Calcula o offset S das páginas, com base no tamanho.
+ * 
+ * @param page_size Tamanho da página.
+ * 
+ * @return S, o offset.
+*/
+unsigned size_calculator(unsigned page_size){
+    unsigned tmp, s;
+
+    s = 0;
+    tmp = page_size;
+    
+    while (tmp > 1) {
+        tmp = tmp >> 1;
+        s++;
+    } 
+
+    return s;
+}; 
+
+
+/**
+ * @brief Calcula o índice da página na tabela de páginas.
+ * 
+ * @param addr Endereço lógico
+ * @param s Offset 
+ * 
+ * @return Índice da tabela de páginas
+*/
+unsigned id_calculator(unsigned addr, unsigned s){
+    return addr >> s;
+}
+
+
+/**
  * @brief Simula o funcionamento de uma memória virtual através do algoritmo LRU
  * 
  * @param rec Ponteiro para o registrador de atividades 
@@ -18,16 +53,19 @@ void simulate_lru(struct Recorder* rec, unsigned page_size, unsigned mem_size, c
     unsigned addr;
     char rw;
     
-    fscanf(filename,"%x %c",&addr,&rw);
+    FILE* file = fopen(filename, "r");    
 
-    if(strcmp("R", rw)){
-        
+    while(fscanf(file,"%x %c",&addr,&rw) == 2){
+        if(strcmp("R", rw)){
+            
 
-    } else {
+        } else {
 
 
-    }
+        }
+    };
 }
+
 
 /**
  * @brief Simula o funcionamento de uma memória virtual através do algoritmo Segunda Chance
@@ -41,16 +79,20 @@ void simulate_2a(struct Recorder* rec, unsigned page_size, unsigned mem_size, ch
     unsigned addr;
     char rw;
     
-    fscanf(filename,"%x %c",&addr,&rw);
+    FILE* file = fopen(filename, "r");
 
-    if(strcmp("R", rw)){
+    while(fscanf(file,"%x %c",&addr,&rw) == 2){
+        
+        if(strcmp("R", rw)){
+            
+
+        } else {
 
 
-    } else {
-
-
-    }
+        }
+    };
 }
+
 
 /**
  * @brief Simula o funcionamento de uma memória virtual através do algoritmo FIFO
@@ -64,16 +106,20 @@ void simulate_fifo(struct Recorder* rec, unsigned page_size, unsigned mem_size, 
     unsigned addr;
     char rw;
     
-    fscanf(filename,"%x %c",&addr,&rw);
+    FILE* file = fopen(filename, "r");
 
-    if(strcmp("R", rw)){
+    while(fscanf(file,"%x %c",&addr,&rw) == 2){
+        
+        if(strcmp("R", rw)){
+            
+
+        } else {
 
 
-    } else {
-
-
-    }
+        }
+    };
 }
+
 
 /**
  * @brief Simula o funcionamento de uma memória virtual através do algoritmo Random
@@ -87,15 +133,18 @@ void simulate_random(struct Recorder* rec, unsigned page_size, unsigned mem_size
     unsigned addr;
     char rw;
     
-    fscanf(filename,"%x %c",&addr,&rw);
+    FILE* file = fopen(filename, "r");
 
-    if(strcmp("R", rw)){
+    while(fscanf(file,"%x %c",&addr,&rw) == 2){
+        
+        if(strcmp("R", rw)){
+            
+
+        } else {
 
 
-    } else {
-
-
-    }
+        }
+    };
 }
 
 
@@ -109,22 +158,22 @@ int main(int argc, char* argv[]){
     unsigned page_size = atoi(argv[3]);
     unsigned mem_size = atoi(argv[4]);
 
+    const unsigned s = size_calculator(page_size);
 
     set_config(&rec, argv);
 
 
     /*switch de algoritmos*/
-
     if (strcmp(alg, "lru") == 0) {
         simulate_lru(&rec, page_size, mem_size, filename);
 
-    } else if(strcmp(alg, "2a")){
+    } else if(strcmp(alg, "2a") == 0){
         simulate_2a(&rec, page_size, mem_size, filename);
 
-    } else if(strcmp(alg, "fifo")){
+    } else if(strcmp(alg, "fifo") == 0){
         simulate_fifo(&rec, page_size, mem_size, filename);
 
-    } else if(strcmp(alg, "random")) {
+    } else if(strcmp(alg, "random") == 0) {
         simulate_random(&rec, page_size, mem_size, filename);
 
     } else {

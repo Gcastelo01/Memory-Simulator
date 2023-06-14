@@ -6,7 +6,7 @@ struct Recorder{
     unsigned page_faults;
     unsigned dirty_pages;
     unsigned acessos;
-};
+} recorder;
 
 void set_config(struct Recorder* recorder, char* argv[]);
 void increase_page_fault(struct Recorder* recorder);
