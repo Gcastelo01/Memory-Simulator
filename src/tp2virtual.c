@@ -158,6 +158,8 @@ int main(int argc, char* argv[]){
     unsigned page_size = atoi(argv[3]);
     unsigned mem_size = atoi(argv[4]);
 
+    Page page_table[mem_size/page_size];
+
     const unsigned s = size_calculator(page_size);
 
     set_config(&rec, argv);

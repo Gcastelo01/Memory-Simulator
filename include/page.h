@@ -4,16 +4,17 @@
 /**
  * @brief Estrutura que representa uma página da memória virtual.
  * 
- * @param id Número da página
- * @param size Tamanho da página
+ * @param id Indice da página
  * @param valid Bit de validade da página (pode ser 0 ou 1)
+ * @param dirty Bit de sujo da página (pode ser 0 ou 1)
+ * @param second_chance Bit de segunda chance da página (pode ser 0 ou 1)
 */
-struct Page{
+typedef struct Page{
     unsigned id;
-    unsigned size;
-
     int valid;
-} page;
+    int dirty;
+    int second_chance;
 
+}Page;
 
 #endif
