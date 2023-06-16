@@ -14,6 +14,7 @@ typedef struct Page{
     int valid;
     int dirty;
     int second_chance;
+    int timer;
 
 }Page;
 
