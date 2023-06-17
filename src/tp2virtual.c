@@ -16,8 +16,9 @@
  *
  * @return Bit indicador de hit (1 caso tenha encontrado, 0 caso não).
  */
-int find(Page *page_table[], int size, unsigned id, int timer)
+int find(Page* page_table[], int size, unsigned id, int timer)
 {
+
     int res = 0;
     for (int i = 0; i < size; i++)
     {
@@ -27,6 +28,7 @@ int find(Page *page_table[], int size, unsigned id, int timer)
             page_table[i]->timer = timer;
         }
     }
+    printf("res = %d\n", res);
     return res;
 }
 
@@ -39,7 +41,7 @@ int find(Page *page_table[], int size, unsigned id, int timer)
  *
  *
  */
-int add(Page *page_table[], int idx, unsigned addr, int timer)
+int add(Page* page_table[], int idx, unsigned addr, int timer)
 {
     page_table[idx]->id = addr;
     page_table[idx]->timer = timer;
@@ -89,12 +91,9 @@ unsigned id_calculator(unsigned addr, int s)
  * @param mem_size Tamanho da memória total disponível
  * @param filename Arquivo .log com todos os acessos de leitura e escrita da memória
  */
-void simulate_lru(struct Recorder *rec, Page page_table[], int size, char *filename, int s)
+void simulate_lru(struct Recorder* rec, Page page_table[], int size, char *filename, int s)
 {
-    printf("1\n");
-    unsigned addr;
-    char rw;
-    int hit;
+    int hit = 0;
 
     int used_adresses = 0;
 
@@ -103,16 +102,23 @@ void simulate_lru(struct Recorder *rec, Page page_table[], int size, char *filen
     int timer = 0;
     int lru = 0;
 
-    while (fscanf(file, "%x %c", &addr, &rw) == 2)
+    unsigned addr;
+    char rw;
+
+    while (fscanf(file, "%x %c ", &addr, &rw) == 2)
     {
         timer++;
-        printf("2\n");
-        if (strcmp("R", rw))
+        
+        if (strcmp("R", &rw))
         {
-            hit = find(&page_table, size, id_calculator(addr, s), timer);
+            unsigned adrress = id_calculator(addr, s);
+
+            hit = find(&page_table, size, adrress, timer);
+            printf("hit = %d\n", hit);
+
             if (!hit)
             {
-                printf("3\n");
+                printf("djasfhaksdf");
                 if (used_adresses < size)// Se tem espaco vazio
                 {
                     add(&page_table, used_adresses, id_calculator(addr, s), timer);
@@ -240,19 +246,16 @@ void simulate_random(struct Recorder *rec, Page page_table[], int size, char *fi
     };
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-    /*Leitura e configuração*/
     struct Recorder rec;
-
 
     char *alg = argv[1]; 
     char *filename = argv[2];
-    
+
     unsigned page_size = atoi(argv[3]);
     unsigned mem_size = atoi(argv[4]);
 
-    printf("Parametros passados: %d \nLi parâmetros: \nAlgoritmo: %s \nArquivo: %s \nPage size: %d \nMem Size: %d", argc, alg, filename, page_size, mem_size);
 
     int size = mem_size / page_size;
     
@@ -262,10 +265,10 @@ int main(int argc, char *argv[])
 
     set_config(&rec, argv);
 
-    /*switch de algoritmos*/
     if (strcmp(alg, "lru") == 0)
     {
         simulate_lru(&rec, page_table, size, filename, s);
+        
     }
     else if (strcmp(alg, "2a") == 0)
     {
@@ -285,5 +288,6 @@ int main(int argc, char *argv[])
     }
 
     print_results(&rec);
+
     return 0;
 }
