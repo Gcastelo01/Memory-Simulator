@@ -25,7 +25,7 @@ void print_results()
 {
     printf("Executando o simulador... \n\tTécnica de reposição: %s\n\tArquivo de entrada: %s\n\tTamanho das Páginas: %sKB\n\tTamanho da memória usada: %sKB\n", rec.configuracao[0], rec.configuracao[1], rec.configuracao[2], rec.configuracao[3]);
     printf("\tPage faults: %d\n", rec.page_faults);
-    printf("\tPáginas sujas escritas: %d", rec.dirty_writes);
+    printf("\tPáginas sujas escritas: %d\n", rec.dirty_writes);
 }
 
 int size_calculator(int page_size)
@@ -75,6 +75,11 @@ void simulate_lru(struct Page *page_table, int size, char *filename, int s)
     int used_adresses = 0;
 
     FILE *file = fopen(filename, "r");
+    if (file == NULL)
+    {
+        printf("ERRO: Não abriu o arquivo");
+    }
+    
 
     int timer = 0;
     int lru = 0;
