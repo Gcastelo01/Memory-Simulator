@@ -6,7 +6,7 @@
         "type": "cppdbg",
         "request": "launch",
         "program": "${workspaceFolder}/tp2virtual",
-        "args": ["lru", "./logs/simulador.log", "30", "2500"],
+        "args": ["random", "{workspaceFolder}/logs/simulador.log", "30", "2500"],
         "stopAtEntry": true,
         "cwd": "${workspaceFolder}",
         "environment": [],

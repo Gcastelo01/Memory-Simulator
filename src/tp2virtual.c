@@ -23,9 +23,9 @@ struct Recorder rec;
 
 void print_results()
 {
-    printf("Executando o simulador... \n\tTécnica de reposição: %s\n\tArquivo de entrada: %s\n\tTamanho das Páginas: %sKB\n\tTamanho da memória usada: %sKB\n", rec.configuracao[0], rec.configuracao[1], rec.configuracao[2], rec.configuracao[3]);
-    printf("\tPage faults: %d\n", rec.page_faults);
-    printf("\tPáginas sujas escritas: %d\n", rec.dirty_writes);
+    printf("Executando o simulador... \nTécnica de reposição: %s\nArquivo de entrada: %s\nTamanho das Páginas: %sKB\nTamanho da memória usada: %sKB\n", rec.configuracao[0], rec.configuracao[1], rec.configuracao[2], rec.configuracao[3]);
+    printf("Page faults: %d\n", rec.page_faults);
+    printf("Páginas sujas escritas: %d\n", rec.dirty_writes);
 }
 
 int size_calculator(int page_size)
@@ -65,7 +65,6 @@ int find(struct Page *page_table, int size, unsigned id, int timer)
     return res;
 }
 
-
 void simulate_lru(struct Page *page_table, int size, char *filename, int s)
 {
     unsigned addr;
@@ -79,7 +78,6 @@ void simulate_lru(struct Page *page_table, int size, char *filename, int s)
     {
         printf("ERRO: Não abriu o arquivo");
     }
-    
 
     int timer = 0;
     int lru = 0;
@@ -223,7 +221,7 @@ void simulate_2a(struct Page *page_table, int size, char *filename, int s)
                 }
                 else // Segunda Chance
                 {
-                    
+
                     for (int i = 0; i < size; i++)
                     {
                         if (page_table[i].ref_bit)
@@ -237,7 +235,6 @@ void simulate_2a(struct Page *page_table, int size, char *filename, int s)
                             break;
                         }
                     }
-
                 }
             }
         }
@@ -253,7 +250,7 @@ void simulate_2a(struct Page *page_table, int size, char *filename, int s)
             else
             {
                 rec.dirty_writes++;
-                
+
                 for (int i = 0; i < size; i++)
                 {
                     if (page_table[i].ref_bit)
@@ -376,6 +373,9 @@ int main(int argc, char *argv[])
         printf("Erro, algoritmo inválido.\n");
         return 1;
     }
+
+    free(page_table);
+    
     print_results();
 
     return 0;
