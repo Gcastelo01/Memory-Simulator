@@ -1,12 +1,12 @@
 # Memory-Simulator
-## Trabalho Prático da matéria de SIstemas Operacionais do DCC-UFMG
+Trabalho Prático da matéria de SIstemas Operacionais do DCC-UFMG
 
-## Sistemas Operacionais 
-## TP2: Simulação de um sistema de memória virtual 
+Sistemas Operacionais 
+TP2: Simulação de um sistema de memória virtual 
 
-### Henrique Rotsen Santos Ferreira - 2020100945 
+Henrique Rotsen Santos Ferreira - 2020100945 
 
-### Gabriel Castelo Branco -  
+Gabriel Castelo Branco -  
 
 ## Resumo 
 
