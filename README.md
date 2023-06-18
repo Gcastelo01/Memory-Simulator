@@ -6,7 +6,7 @@ TP2: Simulação de um sistema de memória virtual
 
 Henrique Rotsen Santos Ferreira - 2020100945 
 
-Gabriel Castelo Branco -  2020006513
+Gabriel Castelo Branco -  2020006523
 
 ## Resumo 
 
