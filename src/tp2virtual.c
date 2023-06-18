@@ -75,7 +75,10 @@ void simulate_lru(struct Page *page_table, int size, char *filename, int s)
     int timer = 0;
     int lru = 0;
 
-    while (fscanf(file, "%x %c", &addr, &rw) == 2)
+    unsigned addr;
+    char rw;
+
+    while (fscanf(file, "%x %c ", &addr, &rw) == 2)
     {
         timer++;
 
@@ -183,7 +186,7 @@ void simulate_fifo(struct Page *page_table, int size, char *filename, int s)
     fclose(file);
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 
     // Parâmetros passados
