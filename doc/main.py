@@ -14,12 +14,11 @@ def log_parser(caminho_arquivo) -> dict:
     with open(caminho_arquivo, 'r') as f:
         linhas = f.readlines()
         
-    # Remove a primeira linha
-    linhas = linhas[1:]
+        linhas = linhas[1:]
     
-    # Extrai o conteúdo após ":"
     for linha in linhas:
-        indice, resultado = linha.split(":", 1)
+
+        indice, resultado = linha.split(":")
         indice = indice.strip()
         dado = resultado.strip()
 
@@ -27,19 +26,16 @@ def log_parser(caminho_arquivo) -> dict:
 
     return res
 
-diretorio = './logs'
+diretorio = './doc/logs'
 
-# Lista todos os arquivos no subdiretório
 arquivos = listdir(diretorio)
 
 r = []
 
-# Itera sobre cada arquivo
 for arquivo in arquivos:
     caminho_arquivo = join(diretorio, arquivo)
+    print(f"Testando arquivo {caminho_arquivo}")
     r.append(log_parser(caminho_arquivo))
-
-    
 
 df = pd.DataFrame(r)
 
@@ -57,11 +53,10 @@ algoritmos = df['Técnica de reposição'].unique()
 
 fig, axs = plt.subplots(2, 2)
 
-# Iterar sobre os arquivos de entrada e plotar gráficos separados 
 for i, arquivo in enumerate(arquivos_entrada):
 
     df_arquivo = df[df['Arquivo de entrada'] == arquivo]
-    ax = axs[i // 2, i % 2]  # Selecionar o subplot correspondente
+    ax = axs[i // 2, i % 2] 
     
     for j, alg in enumerate(algoritmos):
         df_arquivo = df[df['Técnica de reposição'] == alg]
@@ -74,5 +69,5 @@ for i, arquivo in enumerate(arquivos_entrada):
     ax.set_title(arquivo)
     ax.legend()
 
-# Exibir os gráficos
+
 plt.savefig("result.png")

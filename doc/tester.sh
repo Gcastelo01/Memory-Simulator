@@ -12,16 +12,11 @@ then
 
     if [ $? -ne 0 ]
     then
-        echo "[!] Erro criando VENV.  Deseja tentar instalar o gerenciador de venv python? [y/n]"
-        read resp
+        echo "[!] Erro criando VENV. Instalando python3.10-venvL"
 
-        if [ $resp = 'y' ]
-        then
-            apt install python3-venv -y
-            python3 -m venv venv
-        else
-            exit 1
-        fi
+        sudo apt install python3.10-venv -y
+        python3 -m venv venv
+
     fi
 fi
 
@@ -31,11 +26,11 @@ source $CURRDIR/venv/bin/activate
 
 echo "[+] Instalando dependências do Python"
 
-pip install -r requirements.txt
+pip install -r $CURRDIR/requirements.txt
 
 echo "[+] Compilando arquivos C"
 
-/usr/bin/gcc $PWD/src/tp2virtual.c -o tp2virtual
+make
 
 echo "[+] Iniciando testes"
 
@@ -55,4 +50,9 @@ done
 
 echo "[+] Produzindo análise"
 
-python3 main.py
+python3 ./doc/main.py
+
+echo "[+] Análise concluída! Resultado salvo em $PWD/result.png"
+echo "[+] Limpando arquivos de testes..."
+
+rm -r $CURRDIR/logs
