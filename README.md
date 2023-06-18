@@ -6,7 +6,7 @@ TP2: Simulação de um sistema de memória virtual
 
 Henrique Rotsen Santos Ferreira - 2020100945 
 
-Gabriel Castelo Branco -  
+Gabriel Castelo Branco -  2020006513
 
 ## Resumo 
 
@@ -32,22 +32,9 @@ Quando isso acontece, o código simplesmente ignora a linha e continua para a pr
 
 ## Análise de Desempenho 
 
-A análise de desempenho dos algoritmos de substituição de página depende dos programas utilizados e de suas características de acesso à memória. Vou fornecer uma análise geral, considerando os quatro algoritmos implementados: LRU, FIFO, Segunda Chance e Aleatório. 
+A análise de desempenho dos algoritmos de substituição de página depende dos programas utilizados e de suas características de acesso à memória. Para fazer essa análise, temos uma imagem gráfica dos testes automatizados que rodamos.
 
-1. LRU (Least Recently Used): 
+![image](https://github.com/Gcastelo01/Memory-Simulator/assets/65979183/a7024337-b89e-4414-b0e5-676971ba0f59)
 
-O algoritmo LRU tende a ter um bom desempenho em programas com padrões de acesso à memória em que as páginas recentemente acessadas têm maior probabilidade de serem acessadas novamente no futuro próximo. Ele mantém um registro do tempo de acesso de cada página e substitui a página que não foi acessada há mais tempo. Portanto, em programas com bom aproveitamento de localidade temporal, o LRU tende a minimizar o número de faltas de página. 
-
-2. FIFO (First-In-First-Out): 
-
-O algoritmo FIFO é simples e fácil de implementar. Ele substitui a página que está há mais tempo na memória, seguindo uma abordagem de fila. No entanto, o FIFO não leva em consideração o padrão de acesso às páginas, o que pode levar a um desempenho inferior em programas com alto grau de localidade temporal. Ele pode ser adequado para programas em que o padrão de acesso é uniforme ou aleatório. 
-
-3. Segunda Chance: 
-
-O algoritmo de Segunda Chance é uma melhoria do FIFO, onde é adicionado um bit de referência a cada página. Esse bit é definido como 1 sempre que a página é acessada. Quando ocorre uma falta de página, o algoritmo examina o bit de referência da página mais antiga. Se for 0, a página é substituída. Caso contrário, o bit de referência é zerado, e a página recebe uma "segunda chance". Essa abordagem tende a melhorar o desempenho em programas com acesso aleatório ou em programas com altas taxas de referência a páginas recentemente acessadas. 
-
- 4. Aleatório: 
-
-O algoritmo Aleatório simplesmente seleciona uma página aleatória para substituir. É uma abordagem básica que não leva em consideração o histórico de acesso às páginas. Em média, o desempenho do algoritmo aleatório é razoável, mas pode variar dependendo da sorte dos acessos. Em alguns casos, pode apresentar resultados comparáveis aos demais algoritmos, enquanto em outros casos pode ter um desempenho inferior. 
-
- Em resumo, a escolha do melhor algoritmo de substituição de página depende das características do programa e do padrão de acesso à memória. Não há um algoritmo universalmente superior em todas as situações. É importante realizar testes e análises específicas para cada programa a fim de determinar qual algoritmo proporcionará o melhor desempenho. 
+Podemos observar que o algorítimo que teve melhor desempenho foi o Random, o que é uma supresa, já que ele simplesmente seleciona uma página aleatória para substituir. É uma abordagem básica que não leva em consideração o histórico de acesso às páginas. Depois vemos o FIFO e 2a bem semelhantes e por último o LRU.
+Notamos também que quanto menor o tamanho das páginas, menor é o número de page faults.
