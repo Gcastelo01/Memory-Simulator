@@ -40,4 +40,5 @@ Podemos observar que o algorítimo que teve melhor desempenho foi o Random, o qu
 Notamos também que quanto menor o tamanho das páginas, menor é o número de page faults.
 
 
+
 **Atenção: olhar arquivo `result.png`**
