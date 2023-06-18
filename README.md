@@ -6,7 +6,7 @@ TP2: Simulação de um sistema de memória virtual
 
 Henrique Rotsen Santos Ferreira - 2020100945 
 
-Gabriel Castelo Branco -  2020006513
+Gabriel Castelo Branco - 2020006523
 
 ## Resumo 
 
@@ -38,3 +38,6 @@ A análise de desempenho dos algoritmos de substituição de página depende dos
 
 Podemos observar que o algorítimo que teve melhor desempenho foi o Random, o que é uma supresa, já que ele simplesmente seleciona uma página aleatória para substituir. É uma abordagem básica que não leva em consideração o histórico de acesso às páginas. Depois vemos o FIFO e 2a bem semelhantes e por último o LRU.
 Notamos também que quanto menor o tamanho das páginas, menor é o número de page faults.
+
+
+**Atenção: olhar arquivo `result.png`**
