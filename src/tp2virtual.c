@@ -13,9 +13,9 @@ struct Recorder rec;
  */
 void print_results()
 {
-    printf("Executando o simulador... \n\tTécnica de reposição: %s\n\tArquivo de entrada: %s\n\tTamanho das Páginas: %sKB\n\tTamanho da memória usada: %sKB\n", rec.configuracao[0], rec.configuracao[1], rec.configuracao[2], rec.configuracao[3]);
-    printf("\tPage faults: %d\n", rec.page_faults);
-    printf("\tPáginas sujas escritas: %d\n", rec.dirty_writes);
+    printf("Executando o simulador... \nTécnica de reposição: %s\nArquivo de entrada: %s\nTamanho das Páginas: %sKB\nTamanho da memória usada: %sKB\n", rec.configuracao[0], rec.configuracao[1], rec.configuracao[2], rec.configuracao[3]);
+    printf("Page faults: %d\n", rec.page_faults);
+    printf("Páginas sujas escritas: %d\n", rec.dirty_writes);
 }
 
 /**
@@ -445,6 +445,9 @@ int main(int argc, char *argv[])
         printf("Erro, algoritmo inválido.\n");
         return 1;
     }
+
+    free(page_table);
+    
     print_results();
 
     return 0;
