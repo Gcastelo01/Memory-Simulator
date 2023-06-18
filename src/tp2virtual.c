@@ -2,25 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "estruturas.h"
 
-struct Page
-{
-    int id;
-    int dirty;
-    int second_chance;
-    int timer;
-    int ref_bit;
-};
-
-struct Recorder
-{
-    char *configuracao[4];
-    unsigned page_faults;
-    unsigned dirty_writes;
-};
-
+// Variável global
 struct Recorder rec;
 
+/**
+ * @brief Função para mostrar as informaçoes salvas no recorder
+ *
+ */
 void print_results()
 {
     printf("Executando o simulador... \n\tTécnica de reposição: %s\n\tArquivo de entrada: %s\n\tTamanho das Páginas: %sKB\n\tTamanho da memória usada: %sKB\n", rec.configuracao[0], rec.configuracao[1], rec.configuracao[2], rec.configuracao[3]);
@@ -28,6 +18,11 @@ void print_results()
     printf("\tPáginas sujas escritas: %d\n", rec.dirty_writes);
 }
 
+/**
+ * @brief Função para calcular o tamanho do offset
+ *
+ * @param page_size Tamanho da página
+ */
 int size_calculator(int page_size)
 {
     int tmp = page_size, s = 0;
@@ -39,11 +34,25 @@ int size_calculator(int page_size)
     return s + 10;
 };
 
+/**
+ * @brief Função para calcular o Identificador da página na Tabela de páginas
+ *
+ * @param addr Endereço de memória
+ * @param s Offset para desconsiderar
+ */
 unsigned id_calculator(unsigned addr, int s)
 {
     return addr >> s;
 }
 
+/**
+ * @brief Função adicionar um endereço na Tabela de páginas
+ *
+ * @param page_table Tabela de páginas
+ * @param idx Indice da tabela de págnas
+ * @param addr Endereço a ser adicionado
+ * @param timer Timer para o LRU
+ */
 void add(struct Page *page_table, int idx, unsigned addr, int timer)
 {
     page_table[idx].id = addr;
@@ -51,6 +60,14 @@ void add(struct Page *page_table, int idx, unsigned addr, int timer)
     page_table[idx].dirty = 1;
 }
 
+/**
+ * @brief Função para achar um endereço na Tabela de páginas
+ *
+ * @param page_table Tabela de páginas
+ * @param size Tamanho da Tabela
+ * @param id Endereço a ser procurado
+ * @param timer Timer para o LRU
+ */
 int find(struct Page *page_table, int size, unsigned id, int timer)
 {
     int res = 0;
@@ -65,7 +82,14 @@ int find(struct Page *page_table, int size, unsigned id, int timer)
     return res;
 }
 
-
+/**
+ * @brief Função para simular o LRU
+ *
+ * @param page_table Tabela de páginas
+ * @param size Tamanho da Tabela
+ * @param filename Nome do arquivo de log
+ * @param s Offset do endereço do arquivo
+ */
 void simulate_lru(struct Page *page_table, int size, char *filename, int s)
 {
     unsigned addr;
@@ -78,8 +102,8 @@ void simulate_lru(struct Page *page_table, int size, char *filename, int s)
     if (file == NULL)
     {
         printf("ERRO: Não abriu o arquivo");
+        exit(1);
     }
-    
 
     int timer = 0;
     int lru = 0;
@@ -145,6 +169,14 @@ void simulate_lru(struct Page *page_table, int size, char *filename, int s)
     fclose(file);
 }
 
+/**
+ * @brief Função para simular o FIFO
+ *
+ * @param page_table Tabela de páginas
+ * @param size Tamanho da Tabela
+ * @param filename Nome do arquivo de log
+ * @param s Offset do endereço do arquivo
+ */
 void simulate_fifo(struct Page *page_table, int size, char *filename, int s)
 {
     unsigned addr;
@@ -154,25 +186,32 @@ void simulate_fifo(struct Page *page_table, int size, char *filename, int s)
     int used_adresses = 0;
 
     FILE *file = fopen(filename, "r");
+    if (file == NULL)
+    {
+        printf("ERRO: Não abriu o arquivo");
+        exit(1);
+    }
 
-    int timer = 0;
+    int fifo = 0;
 
     while (fscanf(file, "%x %c", &addr, &rw) == 2)
     {
         if (rw == 'R')
         {
-            hit = find(page_table, size, id_calculator(addr, s), timer);
+            hit = find(page_table, size, id_calculator(addr, s), 0);
             if (!hit)
             {
                 rec.page_faults++;
 
                 if (used_adresses < size) // Se tem espaço vazio
                 {
-                    add(page_table, used_adresses, id_calculator(addr, s), timer);
+                    add(page_table, used_adresses, id_calculator(addr, s), 0);
                     used_adresses++;
                 }
                 else // FIFO
                 {
+                    add(page_table, fifo, id_calculator(addr, s), 0);
+                    fifo = (fifo + 1) % size;
                 }
             }
         }
@@ -180,11 +219,15 @@ void simulate_fifo(struct Page *page_table, int size, char *filename, int s)
         {
             if (used_adresses < size) // Se tem espaço vazio
             {
-                add(page_table, used_adresses, id_calculator(addr, s), timer);
+                add(page_table, used_adresses, id_calculator(addr, s), 0);
                 used_adresses++;
             }
             else // FIFO
             {
+                rec.dirty_writes++; // Escrita de página suja
+
+                add(page_table, fifo, id_calculator(addr, s), 0);
+                fifo = (fifo + 1) % size;
             }
         }
     };
@@ -192,6 +235,14 @@ void simulate_fifo(struct Page *page_table, int size, char *filename, int s)
     fclose(file);
 }
 
+/**
+ * @brief Função para simular o Second Chance (2a)
+ *
+ * @param page_table Tabela de páginas
+ * @param size Tamanho da Tabela
+ * @param filename Nome do arquivo de log
+ * @param s Offset do endereço do arquivo
+ */
 void simulate_2a(struct Page *page_table, int size, char *filename, int s)
 {
     unsigned addr;
@@ -201,6 +252,11 @@ void simulate_2a(struct Page *page_table, int size, char *filename, int s)
     int used_adresses = 0;
 
     FILE *file = fopen(filename, "r");
+    if (file == NULL)
+    {
+        printf("ERRO: Não abriu o arquivo");
+        exit(1);
+    }
 
     int timer = 0;
 
@@ -223,7 +279,7 @@ void simulate_2a(struct Page *page_table, int size, char *filename, int s)
                 }
                 else // Segunda Chance
                 {
-                    
+
                     for (int i = 0; i < size; i++)
                     {
                         if (page_table[i].ref_bit)
@@ -237,7 +293,6 @@ void simulate_2a(struct Page *page_table, int size, char *filename, int s)
                             break;
                         }
                     }
-
                 }
             }
         }
@@ -253,7 +308,7 @@ void simulate_2a(struct Page *page_table, int size, char *filename, int s)
             else
             {
                 rec.dirty_writes++;
-                
+
                 for (int i = 0; i < size; i++)
                 {
                     if (page_table[i].ref_bit)
@@ -274,6 +329,15 @@ void simulate_2a(struct Page *page_table, int size, char *filename, int s)
     fclose(file);
 }
 
+
+/**
+ * @brief Função para simular o Random
+ *
+ * @param page_table Tabela de páginas
+ * @param size Tamanho da Tabela
+ * @param filename Nome do arquivo de log
+ * @param s Offset do endereço do arquivo
+ */
 void simulate_random(struct Page *page_table, int size, char *filename, int s)
 {
     srand(time(NULL));
@@ -284,6 +348,11 @@ void simulate_random(struct Page *page_table, int size, char *filename, int s)
     int used_adresses = 0;
 
     FILE *file = fopen(filename, "r");
+    if (file == NULL)
+    {
+        printf("ERRO: Não abriu o arquivo");
+        exit(1);
+    }
 
     int timer = 0;
 
@@ -344,7 +413,7 @@ int main(int argc, char *argv[])
         printf("Falha na alocação de memória!\n");
         return 1;
     }
-
+    
     int s = size_calculator(page_size);
 
     // Configurando o recorder
